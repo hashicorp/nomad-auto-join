@@ -1,20 +1,3 @@
-variable "aws_region" {
-  description = "AWS region to create the environment"
-}
-
-variable "aws_access_key_id" {
-  description = "AWS access key"
-}
-
-variable "aws_secret_access_key" {
-  description = "AWS secret"
-}
-
-variable "aws_zones" {
-  description = "List of AWS availability zones"
-  type        = "list"
-}
-
 variable "instance_type" {
   default = "t2.micro"
 }
@@ -28,6 +11,16 @@ and resources will be scoped under this namespace.
 It is best if you add this to your .tfvars file so you do not need to type
 it manually with each run
 EOH
+}
+
+variable "vpc_cidr_block" {
+  description = "The top-level CIDR block for the VPC."
+  default     = "10.1.0.0/16"
+}
+
+variable "cidr_blocks" {
+  description = "The CIDR blocks to create the workstations in."
+  default     = ["10.1.1.0/24", "10.1.2.0/24"]
 }
 
 variable "consul_version" {
@@ -56,4 +49,9 @@ variable "nomad_servers" {
 
 variable "nomad_agents" {
   description = "The number of nomad agents"
+}
+
+variable "public_key_path" {
+  description = "The absolute path on disk to the SSH public key."
+  default     = "~/.ssh/id_rsa.pub"
 }

@@ -1,6 +1,6 @@
-job "nginx" {
+job "fabio" {
   datacenters = ["dc1"]
-  type        = "service"
+  type        = "system"
 
   update {
     stagger      = "10s"
@@ -19,14 +19,19 @@ job "nginx" {
       mode     = "delay"
     }
 
-    task "nginx" {
+    task "fabio" {
       driver = "docker"
 
+      env = {
+        registry.consul.addr = "${NOMAD_IP_http}:8500"
+      }
+
       config {
-        image = "nginx:latest"
+        image = "docker.io/magiconair/fabio:latest"
 
         port_map {
-          http = 80
+          http = 9999
+          http = 9998
         }
       }
 
@@ -37,25 +42,28 @@ job "nginx" {
         network {
           mbits = 10
 
-          port "http" {}
+          port "http" {
+            static = "9999"
+          }
+
+          port "admin" {
+            static = "9998"
+          }
         }
       }
 
       service {
-        name = "nginx"
-
-        tags = [
-          "urlprefix-/nginx strip=/nginx",
-        ]
-
+        name = "fabio"
+        tags = ["router"]
         port = "http"
 
         check {
+          port     = "admin"
           name     = "alive"
           type     = "http"
           interval = "10s"
           timeout  = "2s"
-          path     = "/"
+          path     = "/health"
         }
       }
     }
