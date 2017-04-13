@@ -14,3 +14,7 @@ sudo chmod +x nomad
 sudo mv nomad /usr/local/bin/nomad
 
 sudo echo "export NOMAD_ADDR=\"http://${nomad_alb}:4646\"" >> /home/ubuntu/.profile
+
+echo "Fetch Jobs"
+curl -sLo /home/ubuntu/http_test.hcl https://raw.githubusercontent.com/nicholasjackson/terraform-nomad/master/jobs/http_test.hcl
+curl -sLo /home/ubuntu/syslog.hcl https://raw.githubusercontent.com/nicholasjackson/terraform-nomad/master/jobs/syslog.hcl

@@ -1,4 +1,4 @@
-job "nginx" {
+job "http_test" {
   datacenters = ["dc1"]
   type        = "service"
 
@@ -19,14 +19,21 @@ job "nginx" {
       mode     = "delay"
     }
 
-    task "nginx" {
+    task "http-echo" {
       driver = "docker"
 
       config {
-        image = "nginx:latest"
+        image = "hashicorp/http-echo:latest"
+
+        args = [
+          "-text",
+          "'hello world'",
+          "-listen",
+          ":8080",
+        ]
 
         port_map {
-          http = 80
+          http = 8080
         }
       }
 
@@ -37,16 +44,14 @@ job "nginx" {
         network {
           mbits = 10
 
-          port "http" {}
+          port "http" {
+            static = 8080
+          }
         }
       }
 
       service {
-        name = "nginx"
-
-        tags = [
-          "urlprefix-/nginx strip=/nginx",
-        ]
+        name = "http-echo"
 
         port = "http"
 

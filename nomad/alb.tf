@@ -24,17 +24,17 @@ resource "aws_alb_target_group" "consul" {
   }
 }
 
-resource "aws_alb_target_group" "fabio" {
+resource "aws_alb_target_group" "http_test" {
   count = "${var.nomad_type == "client" ? 1 : 0}"
 
-  name     = "${var.namespace}-fabio"
-  port     = 9999
+  name     = "${var.namespace}-http-test"
+  port     = 8080
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/health"
-    port = 9998
+    path = "/"
+    port = 8080
   }
 }
 
@@ -77,7 +77,7 @@ resource "aws_alb_listener" "consul" {
   }
 }
 
-resource "aws_alb_listener" "fabio" {
+resource "aws_alb_listener" "http" {
   count = "${var.nomad_type == "client" ? 1 : 0}"
 
   load_balancer_arn = "${var.external_alb_arn}"
@@ -85,7 +85,7 @@ resource "aws_alb_listener" "fabio" {
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.fabio.arn}"
+    target_group_arn = "${aws_alb_target_group.http_test.arn}"
     type             = "forward"
   }
 }
