@@ -8,7 +8,7 @@ consul_join_tag_value = "default"
 
 nomad_version = "0.5.6"
 
-nomad_servers = 1
+nomad_servers = 3
 
 nomad_agents = 2
 
