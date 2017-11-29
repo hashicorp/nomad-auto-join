@@ -7,7 +7,8 @@ resource "aws_alb_target_group" "nomad" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/v1/agent/self"
+    path    = "/v1/agent/self"
+    matcher = "200"
   }
 }
 
@@ -20,7 +21,8 @@ resource "aws_alb_target_group" "consul" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/v1/status/leader"
+    path    = "/v1/status/leader"
+    matcher = "200"
   }
 }
 
@@ -33,8 +35,9 @@ resource "aws_alb_target_group" "http_test" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/"
-    port = 8080
+    path    = "/"
+    port    = 8080
+    matcher = "200"
   }
 }
 
@@ -47,7 +50,8 @@ resource "aws_alb_target_group" "ui" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/nomad"
+    path    = "/nomad"
+    matcher = "200"
   }
 }
 
